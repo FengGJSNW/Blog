@@ -1,5 +1,5 @@
 ---
-title: c++ unorder_map中对tuple，pair哈希类型的拓展写法
+title: c++ unordered_map中对tuple，pair哈希类型的拓展写法
 published: 2026-01-07
 description: 拓展
 tags: [拓展]
@@ -8,7 +8,7 @@ draft: false
 ---
 
 ## 前言
-> 不知道你是否有过和我一样的经历：当尝试使用unorder_map建立起pair<int, int>或者tuple<...> 到int类型的映射时：
+> 不知道你是否有过和我一样的经历：当尝试使用unordered_map建立起pair<int, int>或者tuple<...> 到int类型的映射时：
 ```c
 int main() {
     std::unordered_map<std::tuple<int,int>, int> mp;
@@ -45,7 +45,7 @@ template<
 | **_Pred** | 用于判断两个 Key 是否相等的函数对象。 | `std::equal_to<_Key>` |
 | **_Alloc** | 用于管理容器内存的分配器。 | `std::allocator<...>` |
 
-通过查看unorder_map需要的参数，我们可以看到 `unordered_map` 共有五个模板参数。编译器之所以报错，是因为第三个参数（哈希函数）在面对 `tuple` 或 `pair` 时失效了，因为c++没有内置默认的hash方案。想要解决这个问题，我们要手动传入一个 `std::hash<Key>`。
+通过查看unordered_map需要的参数，我们可以看到 `unordered_map` 共有五个模板参数。编译器之所以报错，是因为第三个参数（哈希函数）在面对 `tuple` 或 `pair` 时失效了，因为c++没有内置默认的hash方案。想要解决这个问题，我们要手动传入一个 `std::hash<Key>`。
 
 > 这里顺便提一嘴，**你是否想过为什么不是传入一个函数(例如lambda表达式)呢？**<br>
 > **这里涉及到几个问题：**<br>
@@ -58,7 +58,7 @@ template<
 > * 使用**struct（重载 operator()）**： 编译器在编译 unordered_map 的代码时，知道 Hash 参数的具体类型。因为哈希逻辑就在这个类型的 operator() 里，编译器可以非常容易地进行内联（Inline）。也就是说，它会把哈希逻辑直接“打碎”并嵌入到容器的调用处，省去了函数调用的开销（压栈、跳转、返回）。
 > * 使用**普通函数指针**： 函数指针是在运行时指向某个地址。编译器很难在编译阶段断定这个指针到底指向谁，因此很难进行内联。在哈希表这种需要频繁计算（成千上万次）的场景下，函数调用的开销积累起来会非常明显。
 
-> 3️⃣ **符合“函数对象”的规范**：C++ STL 的设计遵循 “策略与对象分离” 的原则，这也属于是c++的内核思想：面相对象编程。<br> 不懂的话，你就理解为这是一个你自己写的 **模块** ,为了拼接到unorder_map上，你要自己弄一个模块换上去！！！<br>
+> 3️⃣ **符合“函数对象”的规范**：C++ STL 的设计遵循 “策略与对象分离” 的原则，这也属于是c++的内核思想：面相对象编程。<br> 不懂的话，你就理解为这是一个你自己写的 **模块** ,为了拼接到unordered_map上，你要自己弄一个模块换上去！！！<br>
 
 
 **因此，我们需要写一个struct,里面包含一个函数（应当叫`函数对象`或者`仿函数`，因为要用operator()，不懂得话就看下面的Q4就行）用于处理hash的实现**
@@ -92,14 +92,14 @@ int main() {
     std::cout << mp[{3,5}];
 }
 ```
-- 在这个代码中，我们已经自己写了一个struct TupleHash，并且将其传入了unorder_map的第三个参数中。这样子unorder_map就可以使用你自己的hash方案了。
+- 在这个代码中，我们已经自己写了一个struct TupleHash，并且将其传入了unordered_map的第三个参数中。这样子unordered_map就可以使用你自己的hash方案了。
 
 **现在，我来讲解一下这个struct TupleHash在干嘛：(超详细讲解哦)**
 
 ### Q1: 为什么必须写成struct？
 >   罚你去看前面的内容🤗<br>
->   你不看的话也没问题，简单来说，你要按unorder_map的规则，在第三个参数那里传入一个struct/class(一般写struct,class也没问题)，而且这样有利于程序性能提高。
->   还有就是，想让unorder_map识别_Hash,你就需要按这个规则写代码
+>   你不看的话也没问题，简单来说，你要按unordered_map的规则，在第三个参数那里传入一个struct/class(一般写struct,class也没问题)，而且这样有利于程序性能提高。
+>   还有就是，想让unordered_map识别_Hash,你就需要按这个规则写代码
 >   ```cpp
 >   struct TupleHash {
 >       size_t operator()(Key) const;
@@ -158,7 +158,7 @@ int main() {
 >   显然，如果大家起的名字都不一样，unordered_map 的开发者就疯了，因为他不知道在代码里该调用哪一个。
 >   但是，operator() 是唯一的。 在 C++ 中，operator() 是语法级别的约定。只要你重载了它，你的对象 h 就可以直接通过 h() 来调用。编译器不需要知道你给函数起了什么名，它只认那个括号。
 >
->   于是在unorder_map的内部（你不许要完全知到unorder_map是如何实现的），就会这样子：<br>
+>   于是在unordered_map的内部（你不许要完全知到unordered_map是如何实现的），就会这样子：<br>
 > 1.你传入了定义的 struct MyHash。<br>
 > 2.unordered_map 在内部会实例化这个 struct：MyHash h;<br>
 > 3.当需要哈希时，它直接像函数一样调用这个实例：size_t val = h(key);。<br>
@@ -178,6 +178,14 @@ int main() {
 ### Q5:（哈希核心） std::apply([&seed](const Ts&... args) {((seed ^= std::hash<Ts>{}(args)+ 0x9e3779b9+ (seed << 6)+ (seed >> 2)), ...);}, t);是什么意思？
 
 >   为了搞明白这段代码到底在干什么，先不妨看这篇文章：
-[哈希表及其工作原理](/posts/code/data-structure/hash-table/)
+[哈希表及其工作原理](/posts/code/data-structure/hash-table/)<br>
 我已经将该例子的哈希函数嵌入到这篇文章的哈希函数实现的第三个例子，这里主要讲一些语法问题
 
+> std::apply() 其意义是将元组展开为参数包:<br>
+> 如std::apply([&seed](const Ts&... args) {
+    ...
+}, t);<br>
+> 等价<br>
+> // 假设 t = tuple{a, b, c}<br>
+> lambda(a, b, c);<br>
+> 注:lambda意思是匿名函数

@@ -1,5 +1,5 @@
 ---
-title: 广东工业大学 ACM-ICPC 第一次比赛(2025/10月月赛)
+title: 广东工业大学 ACM-ICPC 第一次比赛(2025/10/19月月赛)
 published: 2026-01-07
 description: 讲解与解题的思考历程
 tags: [比赛, 讲解]
@@ -8,9 +8,15 @@ draft: false
 ---
 
 ## 📜 **试题查看与下载**
-<a href="/assets/blog_article/material/2025-oct-contest.pdf" target="_blank">📥 点击下载/在线查看：2025年月赛题面</a>  
+<a href="/assets/blog_article/material/2025-10-19-oct-contest.pdf" target="_blank">📥 点击下载/在线查看：2025/10/19年月赛题面</a>  
 <br>
-<a href="/assets/blog_article/material/2025-oct-contest-answer.pdf" target="_blank">📥 点击下载/在线查看：2025年月赛题解</a>
+<a href="/assets/blog_article/material/2025-10-19-oct-contest-answer.pdf" target="_blank">📥 点击下载/在线查看：2025/10/19年月赛题解</a>
+
+
+---
+
+## 🖥️ **测试/补题链接**
+<a href="https://codeforces.com/gym/106130" target="_blank">GDUT 2025 Monthly competition</a>  
 
 ---
 ## 🔖 **题目跳转**

@@ -24,7 +24,7 @@ draft: false
         * 链表、树和图
         * 栈
         * 队列
-        * 哈希表
+        * [哈希表](/posts/code/data-structure/hash-table/)
         * 动态数组
         * ...
     * 📝 **模版构造**
@@ -32,8 +32,8 @@ draft: false
         * [c++ 中的运算符重载](/posts/code/language/cpp/operator-overloading/)
     * 📜 **竞赛真题**
         * [广东工业大学ACM-ICPC校赛-月赛](/posts/code/competition/post-01/post/)
-        * 广东工业大学ACM-ICPC校赛-校队选拔初赛
-        * 广东工业大学ACM-ICPC校赛-校队选拔决赛
+        * [广东工业大学ACM-ICPC校赛-校队选拔初赛](/posts/code/competition/post-02/post/)
+        * [广东工业大学ACM-ICPC校赛-校队选拔决赛](/posts/code/competition/post-03/post/)
 * 💻 **计算机语言 (Languages)**
     * 🦀 **C**
     * ⚡ **C++**
@@ -44,7 +44,7 @@ draft: false
         * Astro + Firefly 搭建笔记
     * 🔧 **开发工具**
         * VS Code 配置指南
-        * 安卓 adb 工具的使用
+        * [安卓 adb 工具的使用](/posts/tech/adb/)
 * ✍️ **生活随笔 & 心得**
 
 
